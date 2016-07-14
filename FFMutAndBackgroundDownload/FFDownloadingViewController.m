@@ -178,6 +178,16 @@
             }
         } else if (item.downloadStatus == FFDownloadBackgroudSuccuss) {
             FFShowAlertView(@"此任务已经完成");
+        } else {
+            if (buttonIndex == 0) {
+                [[AppDelegate appDelegate].downloadHandle startDownload:item.identifier downloadUrl:item.downloadUrl];
+            } else if (buttonIndex == 1) {
+                [[AppDelegate appDelegate].downloadHandle pauseDownload:item.identifier];
+            } else if (buttonIndex == 2) {
+                [[AppDelegate appDelegate].downloadHandle resumeDownload:item.identifier];
+            } else if (buttonIndex == 3) {
+                [[AppDelegate appDelegate].downloadHandle cancleDownload:item.identifier];
+            }
         }
     }
 }

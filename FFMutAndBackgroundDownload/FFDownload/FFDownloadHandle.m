@@ -124,6 +124,16 @@
         item.downloadUrl = [task.currentRequest.URL absoluteString];
         item.downloadTask = task;
         
+        if (task.state == NSURLSessionTaskStateRunning) {
+            item.downloadStatus = FFDownloadIng;
+        } else if (task.state == NSURLSessionTaskStateSuspended) {
+            item.downloadStatus = FFDownloadPause;
+        } else if (task.state == NSURLSessionTaskStateCanceling) {
+            item.downloadStatus = FFDownloadCancle;
+        } else if (task.state == NSURLSessionTaskStateCompleted) {
+            item.downloadStatus = FFDownloadBackgroudSuccuss;
+        }
+        
         [self.downloadItems addObject:item];
     }
 }
