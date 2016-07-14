@@ -43,8 +43,8 @@
 }
 
 #pragma mark -- method,下载任务相关
-- (void)startDownload:(NSString *)identify downloadUrl:(NSString *)downloadUrl {
-    NSURLSessionDownloadTask *task = [self getDownloadtask:identify];
+- (void)startDownload:(NSString *)identifier downloadUrl:(NSString *)downloadUrl {
+    NSURLSessionDownloadTask *task = [self getDownloadtask:identifier];
     if (task) {
         NSLog(@"此下载任务已经存在");
         return;
@@ -52,19 +52,26 @@
     
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:downloadUrl]];
     NSURLSessionDownloadTask *backgroundSessionTask = [self.backgroundSession downloadTaskWithRequest:request];
-    backgroundSessionTask.taskDescription = identify;
+    backgroundSessionTask.taskDescription = identifier;
     [backgroundSessionTask resume];
+    
+    FFDownloadItem *item = [[FFDownloadItem alloc] init];
+    item.identifier = identifier;
+    item.downloadUrl = downloadUrl;
+    item.downloadTask = backgroundSessionTask;
+    
+    [self.downloadItems addObject:item];
     
     __weak typeof(self) this = self;
     dispatch_async(dispatch_get_main_queue(), ^{
         if (this.downloadResultBlock) {
-            this.downloadResultBlock([FFDownloadItem getDownloadRespose:FFDownloadStart identity:identify hasDownloadLength:0 totalLength:0]);
+            this.downloadResultBlock([FFDownloadItem getDownloadRespose:FFDownloadStart identity:identifier hasDownloadLength:0 totalLength:0]);
         }
     });
 }
 
-- (void)pauseDownload:(NSString *)identify {
-    NSURLSessionDownloadTask *task = [self getDownloadtask:identify];
+- (void)pauseDownload:(NSString *)identifier {
+    NSURLSessionDownloadTask *task = [self getDownloadtask:identifier];
     if (task && task.state == NSURLSessionTaskStateRunning) {
         [task suspend];
     }
@@ -72,13 +79,13 @@
     __weak typeof(self) this = self;
     dispatch_async(dispatch_get_main_queue(), ^{
         if (this.downloadResultBlock) {
-            this.downloadResultBlock([FFDownloadItem getDownloadRespose:FFDownloadPause identity:identify hasDownloadLength:0 totalLength:0]);
+            this.downloadResultBlock([FFDownloadItem getDownloadRespose:FFDownloadPause identity:identifier hasDownloadLength:0 totalLength:0]);
         }
     });
 }
 
-- (void)resumeDownload:(NSString *)identify {
-    NSURLSessionDownloadTask *task = [self getDownloadtask:identify];
+- (void)resumeDownload:(NSString *)identifier {
+    NSURLSessionDownloadTask *task = [self getDownloadtask:identifier];
     if (task && task.state == NSURLSessionTaskStateSuspended) {
         [task resume];
     }
@@ -86,24 +93,24 @@
     __weak typeof(self) this = self;
     dispatch_async(dispatch_get_main_queue(), ^{
         if (this.downloadResultBlock) {
-            this.downloadResultBlock([FFDownloadItem getDownloadRespose:FFDownloadResume identity:identify hasDownloadLength:0 totalLength:0]);
+            this.downloadResultBlock([FFDownloadItem getDownloadRespose:FFDownloadResume identity:identifier hasDownloadLength:0 totalLength:0]);
         }
     });
 }
 
-- (void)cancleDownload:(NSString *)identify {
-    NSURLSessionDownloadTask *task = [self getDownloadtask:identify];
+- (void)cancleDownload:(NSString *)identifier {
+    NSURLSessionDownloadTask *task = [self getDownloadtask:identifier];
     if (task && (task.state == NSURLSessionTaskStateRunning || task.state == NSURLSessionTaskStateSuspended)) {
         [task cancel];
         task = nil;
         
-        [self removeDownloadTask:identify];
+        [self removeDownloadTask:identifier];
     }
     
     __weak typeof(self) this = self;
     dispatch_async(dispatch_get_main_queue(), ^{
         if (this.downloadResultBlock) {
-            this.downloadResultBlock([FFDownloadItem getDownloadRespose:FFDownloadCancle identity:identify hasDownloadLength:0 totalLength:0]);
+            this.downloadResultBlock([FFDownloadItem getDownloadRespose:FFDownloadCancle identity:identifier hasDownloadLength:0 totalLength:0]);
         }
     });
 }
@@ -121,11 +128,11 @@
     }
 }
 
-- (NSURLSessionDownloadTask *)getDownloadtask:(NSString *)identify {
+- (NSURLSessionDownloadTask *)getDownloadtask:(NSString *)identifier {
     [self.lock lock];
     if (self.downloadItems.count > 0) {
         for (FFDownloadItem *item in self.downloadItems) {
-            if ([item.identifier isEqualToString:identify]) {
+            if ([item.identifier isEqualToString:identifier]) {
                 [self.lock unlock];
                 return item.downloadTask;
             }
@@ -135,10 +142,10 @@
     return nil;
 }
 
-- (BOOL)removeDownloadTask:(NSString *)identify {
+- (BOOL)removeDownloadTask:(NSString *)identifier {
     if (self.downloadItems.count > 0) {
         for (FFDownloadItem *item in self.downloadItems) {
-            if ([item.identifier isEqualToString:identify]) {
+            if ([item.identifier isEqualToString:identifier]) {
                 [self.downloadItems removeObject:item];
                 
                 break;
@@ -148,19 +155,19 @@
     return YES;
 }
 
-- (BOOL)saveDownloadFile:(NSString *)identify location:(NSURL *)location {
+- (BOOL)saveDownloadFile:(NSString *)identifier location:(NSURL *)location {
     // 移除下载任务
-    NSURLSessionDownloadTask *task = [self getDownloadtask:identify];
+    NSURLSessionDownloadTask *task = [self getDownloadtask:identifier];
     if (task && (task.state == NSURLSessionTaskStateRunning || task.state == NSURLSessionTaskStateSuspended)) {
         [task cancel];
         task = nil;
         
-        [self removeDownloadTask:identify];
+        [self removeDownloadTask:identifier];
     }
     
     NSFileManager *fileManager = [NSFileManager defaultManager];
 
-    NSString *targetFile = [NSString stringWithFormat:@"file://%@",[FFFileManager getFullFile:identify]];
+    NSString *targetFile = [NSString stringWithFormat:@"file://%@",[FFFileManager getFullFile:identifier]];
     NSURL *targetFileUrl = [NSURL URLWithString:targetFile];
     NSLog(@"targetFile==>>%@",targetFileUrl.absoluteString);
 //    [fileManager removeItemAtURL:targetFile error:NULL];
@@ -170,7 +177,7 @@
         __weak typeof(self) this = self;
         dispatch_async(dispatch_get_main_queue(), ^{
             if (this.downloadResultBlock) {
-                this.downloadResultBlock([FFDownloadItem getDownloadRespose:FFDownloadBackgroudSuccuss identity:identify hasDownloadLength:0 totalLength:0]);
+                this.downloadResultBlock([FFDownloadItem getDownloadRespose:FFDownloadBackgroudSuccuss identity:identifier hasDownloadLength:0 totalLength:0]);
             }
         });
     }
@@ -215,14 +222,11 @@ didFinishDownloadingToURL:(NSURL *)location {
 -(void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error {
     if (error == nil) {
         NSLog(@"下载成功");
-//        __weak typeof(self) this = self;
-//        dispatch_async(dispatch_get_main_queue(), ^{
-//            if (this.downloadResultBlock) {
-//                this.downloadResultBlock([FFDownloadItem getDownloadRespose:FFDownloadBackgroudSuccuss identity:task.taskDescription hasDownloadLength:0 totalLength:0]);
-//            }
-//        });
     } else {
-        self.downloadResultBlock([FFDownloadItem getDownloadRespose:FFDownloadFail identity:task.taskDescription hasDownloadLength:0 totalLength:0]);
+        __weak typeof(self) this = self;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            this.downloadResultBlock([FFDownloadItem getDownloadRespose:FFDownloadFail identity:task.taskDescription hasDownloadLength:0 totalLength:0]);
+        });
     }
 }
 

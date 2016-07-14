@@ -15,9 +15,9 @@ typedef void(^downloadResultBlock)(FFDownloadItem *response);
 
 - (void)configDownloadResultBlock:(void(^)(FFDownloadItem *response))downloadResultBlock;
 
-- (void)startDownload:(NSString *)identify downloadUrl:(NSString *)downloadUrl;
-- (void)pauseDownload:(NSString *)identify;
-- (void)resumeDownload:(NSString *)identify;
-- (void)cancleDownload:(NSString *)identify;
+- (void)startDownload:(NSString *)identifier downloadUrl:(NSString *)downloadUrl;
+- (void)pauseDownload:(NSString *)identifier;
+- (void)resumeDownload:(NSString *)identifier;
+- (void)cancleDownload:(NSString *)identifier;
 
 @end

@@ -17,6 +17,9 @@
 + (NSString *)getDownloadPist;
 
 
++ (BOOL)saveModelDataToPlist:(id)data;
++ (NSArray *)getPlistModelData;
+
 // 保存下载成功文件状态
 + (BOOL)saveDownloadSucFile:(NSString *)identifier downloadFileUrl:(NSString *)downloadFileUrl;
 // 删除下载成功文件状态

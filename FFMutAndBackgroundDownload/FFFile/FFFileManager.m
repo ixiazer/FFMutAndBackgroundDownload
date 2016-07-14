@@ -49,6 +49,52 @@
     return sucFile;
 }
 
++ (BOOL)saveModelDataToPlist:(id)data {
+    if (!data) {
+        return NO;
+    }
+    
+    NSString *plistString = [self getDownloadPist];
+    
+    if ([FFFileManager isExistWithFileName:plistString]) {
+        [FFFileManager deleteFile:plistString];
+    }
+    
+    if ([data isKindOfClass:[NSArray class]]) {
+        NSArray *arr = (NSArray *)data;
+        [NSKeyedArchiver archiveRootObject:arr toFile:plistString];
+    }
+    
+    return YES;
+}
+
++ (NSArray *)getPlistModelData {
+    NSString *plistString = [self getDownloadPist];
+    
+    NSArray *data = [NSKeyedUnarchiver unarchiveObjectWithFile:plistString];
+    
+    return data;
+}
+
++ (BOOL)isExistWithFileName:(NSString *)fileName {
+    return [[NSFileManager defaultManager] fileExistsAtPath:fileName];
+}
+
++ (BOOL)deleteFile:(NSString *)fileName {
+    if (![self isExistWithFileName:fileName]) {
+        return YES;
+    }
+    
+    NSError *error = nil;
+    
+    if (![[NSFileManager defaultManager] removeItemAtPath:fileName error:&error]) {
+        return NO;
+    }
+    
+    return YES;
+}
+
+
 // 是否创建下载记录
 + (BOOL)isHasDownloadFile:(NSString *)identifier {
     NSDictionary *plistDic = [[NSDictionary alloc] initWithContentsOfFile:[FFFileManager getDownloadPist]];
