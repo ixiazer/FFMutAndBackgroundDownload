@@ -1,5 +1,5 @@
 //
-//  ViewController.h
+//  FFDownloadSucViewController.h
 //  FFMutAndBackgroundDownload
 //
 //  Created by ixiazer on 16/7/13.
@@ -8,8 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ViewController : UIViewController
-
+@interface FFDownloadSucViewController : UIViewController
 
 @end
-

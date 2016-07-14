@@ -7,6 +7,8 @@
 //
 
 #import "AppDelegate.h"
+#import "FFDownloadingViewController.h"
+#import "FFDownloadSucViewController.h"
 
 @interface AppDelegate ()
 
@@ -17,7 +19,36 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
+    
+    FFDownloadingViewController *downloadingVC = [[FFDownloadingViewController alloc] init];
+
+    UINavigationController *downloadingNav = [[UINavigationController alloc] initWithRootViewController:downloadingVC];
+    downloadingNav.tabBarItem.title = @"下载";
+    downloadingNav.tabBarItem.image = [UIImage imageNamed:@""];
+    
+    FFDownloadSucViewController *downloadSucVC = [[FFDownloadSucViewController alloc] init];
+
+    UINavigationController *downloadSucNav = [[UINavigationController alloc] initWithRootViewController:downloadSucVC];
+    downloadSucNav.tabBarItem.title = @"成功";
+    downloadSucNav.tabBarItem.image = [UIImage imageNamed:@""];
+    
+    UITabBarController *tabbarController = [[UITabBarController alloc] init];
+    tabbarController.viewControllers = @[downloadingNav,downloadSucNav];
+
+    self.window.rootViewController = tabbarController;
+
+    [self configDownloadtask];
+    
     return YES;
+}
+
+- (void)configDownloadtask {
+    __weak typeof(self) this = self;
+    [self.downloadHandle configDownloadResultBlock:^(FFDownloadItem *response) {
+        if (this.downloadingVC) {
+            [this.downloadingVC handleDownload:response];
+        }
+    }];
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {
@@ -45,6 +76,18 @@
 - (void)application:(UIApplication *)application handleEventsForBackgroundURLSession:(NSString *)identifier completionHandler:(void (^)())completionHandler
 {
     self.backgroundURLSessionCompletionHandler = completionHandler;
+}
+
++ (AppDelegate *)appDelegate {
+    return (AppDelegate *)[UIApplication sharedApplication].delegate;
+}
+
+#pragma mark -- get method
+- (FFDownloadHandle *)downloadHandle {
+    if (!_downloadHandle) {
+        _downloadHandle = [[FFDownloadHandle alloc] init];
+    }
+    return _downloadHandle;
 }
 
 @end

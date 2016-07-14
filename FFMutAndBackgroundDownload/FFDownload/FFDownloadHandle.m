@@ -7,14 +7,13 @@
 //
 
 #import "FFDownloadHandle.h"
-#import "FFDownloadResponse.h"
 #import "AppDelegate.h"
 #import "FFDownloadItem.h"
 #import "FFFileManager.h"
 
-@interface FFDownloadHandle () <NSURLSessionDownloadDelegate, NSURLSessionDataDelegate, NSURLSessionDataDelegate>
+@interface FFDownloadHandle () <NSURLSessionDownloadDelegate, NSURLSessionDataDelegate, NSURLSessionDataDelegate, NSURLSessionDelegate>
 @property (nonatomic, strong) NSURLSession *backgroundSession;
-@property (nonatomic, copy) void(^downloadResultBlock)(FFDownloadResponse *response);
+@property (nonatomic, copy) void(^downloadResultBlock)(FFDownloadItem *response);
 @property (nonatomic, strong) NSMutableArray *downloadItems;
 @property (nonatomic, strong) NSLock *lock;
 @end
@@ -39,7 +38,7 @@
     return self;
 }
 
-- (void)configDownloadResultBlock:(void(^)(FFDownloadResponse *response))downloadResultBlock {
+- (void)configDownloadResultBlock:(void(^)(FFDownloadItem *response))downloadResultBlock {
     self.downloadResultBlock = downloadResultBlock;
 }
 
@@ -56,9 +55,12 @@
     backgroundSessionTask.taskDescription = identify;
     [backgroundSessionTask resume];
     
-    if (self.downloadResultBlock) {
-        self.downloadResultBlock([FFDownloadResponse getDownloadRespose:FFDownloadStart identity:identify hasDownloadLength:0 totalLength:0]);
-    }
+    __weak typeof(self) this = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (this.downloadResultBlock) {
+            this.downloadResultBlock([FFDownloadItem getDownloadRespose:FFDownloadStart identity:identify hasDownloadLength:0 totalLength:0]);
+        }
+    });
 }
 
 - (void)pauseDownload:(NSString *)identify {
@@ -67,9 +69,12 @@
         [task suspend];
     }
     
-    if (self.downloadResultBlock) {
-        self.downloadResultBlock([FFDownloadResponse getDownloadRespose:FFDownloadPause identity:identify hasDownloadLength:0 totalLength:0]);
-    }
+    __weak typeof(self) this = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (this.downloadResultBlock) {
+            this.downloadResultBlock([FFDownloadItem getDownloadRespose:FFDownloadPause identity:identify hasDownloadLength:0 totalLength:0]);
+        }
+    });
 }
 
 - (void)resumeDownload:(NSString *)identify {
@@ -78,9 +83,12 @@
         [task resume];
     }
     
-    if (self.downloadResultBlock) {
-        self.downloadResultBlock([FFDownloadResponse getDownloadRespose:FFDownloadResume identity:identify hasDownloadLength:0 totalLength:0]);
-    }
+    __weak typeof(self) this = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (this.downloadResultBlock) {
+            this.downloadResultBlock([FFDownloadItem getDownloadRespose:FFDownloadResume identity:identify hasDownloadLength:0 totalLength:0]);
+        }
+    });
 }
 
 - (void)cancleDownload:(NSString *)identify {
@@ -92,9 +100,12 @@
         [self removeDownloadTask:identify];
     }
     
-    if (self.downloadResultBlock) {
-        self.downloadResultBlock([FFDownloadResponse getDownloadRespose:FFDownloadCancle identity:identify hasDownloadLength:0 totalLength:0]);
-    }
+    __weak typeof(self) this = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (this.downloadResultBlock) {
+            this.downloadResultBlock([FFDownloadItem getDownloadRespose:FFDownloadCancle identity:identify hasDownloadLength:0 totalLength:0]);
+        }
+    });
 }
 
 #pragma mark -- method
@@ -149,14 +160,19 @@
     
     NSFileManager *fileManager = [NSFileManager defaultManager];
 
-    NSURL *targetFile = [NSURL URLWithString:[FFFileManager getFullFile:identify]];
-    [fileManager removeItemAtURL:targetFile error:NULL];
+    NSString *targetFile = [NSString stringWithFormat:@"file://%@",[FFFileManager getFullFile:identify]];
+    NSURL *targetFileUrl = [NSURL URLWithString:targetFile];
+    NSLog(@"targetFile==>>%@",targetFileUrl.absoluteString);
+//    [fileManager removeItemAtURL:targetFile error:NULL];
     NSError *error;
-    BOOL success = [fileManager copyItemAtURL:location toURL:targetFile error:&error];
+    BOOL success = [fileManager copyItemAtURL:location toURL:targetFileUrl error:&error];
     if (success) {
-        if (self.downloadResultBlock) {
-            self.downloadResultBlock([FFDownloadResponse getDownloadRespose:FFDownloadBackgroudSuccuss identity:identify hasDownloadLength:0 totalLength:0]);
-        }
+        __weak typeof(self) this = self;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (this.downloadResultBlock) {
+                this.downloadResultBlock([FFDownloadItem getDownloadRespose:FFDownloadBackgroudSuccuss identity:identify hasDownloadLength:0 totalLength:0]);
+            }
+        });
     }
 
     return YES;
@@ -165,10 +181,13 @@
 #pragma mark - NSURLSessionDownloadDelegate methods
 - (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didWriteData:(int64_t)bytesWritten totalBytesWritten:(int64_t)totalBytesWritten totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite
 {
-    NSLog(@"下载字节==>>%f/%f",(double)totalBytesWritten,(double)totalBytesExpectedToWrite);
-    if (self.downloadResultBlock) {
-        self.downloadResultBlock([FFDownloadResponse getDownloadRespose:FFDownloadIng identity:downloadTask.taskDescription hasDownloadLength:totalBytesWritten totalLength:totalBytesExpectedToWrite]);
-    }
+//    NSLog(@"下载字节==>>%f/%f",(double)totalBytesWritten,(double)totalBytesExpectedToWrite);
+    __weak typeof(self) this = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (this.downloadResultBlock) {
+            this.downloadResultBlock([FFDownloadItem getDownloadRespose:FFDownloadIng identity:downloadTask.taskDescription hasDownloadLength:totalBytesWritten totalLength:totalBytesExpectedToWrite]);
+        }
+    });
 }
 
 - (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask
@@ -189,14 +208,21 @@ didFinishDownloadingToURL:(NSURL *)location {
         appDelegate.backgroundURLSessionCompletionHandler = nil;
         completionHandler();
     }
-    NSLog(@"任务已完成!");
+    NSLog(@"全部任务已完成!");
 }
 
 #pragma mark -- NSURLSessionDataDelegate
 -(void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error {
     if (error == nil) {
+        NSLog(@"下载成功");
+//        __weak typeof(self) this = self;
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            if (this.downloadResultBlock) {
+//                this.downloadResultBlock([FFDownloadItem getDownloadRespose:FFDownloadBackgroudSuccuss identity:task.taskDescription hasDownloadLength:0 totalLength:0]);
+//            }
+//        });
     } else {
-        self.downloadResultBlock([FFDownloadResponse getDownloadRespose:FFDownloadFail identity:task.taskDescription hasDownloadLength:0 totalLength:0]);
+        self.downloadResultBlock([FFDownloadItem getDownloadRespose:FFDownloadFail identity:task.taskDescription hasDownloadLength:0 totalLength:0]);
     }
 }
 

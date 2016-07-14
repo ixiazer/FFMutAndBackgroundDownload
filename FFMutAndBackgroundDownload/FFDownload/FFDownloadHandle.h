@@ -7,13 +7,13 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "FFDownloadResponse.h"
+#import "FFDownloadItem.h"
 
-typedef void(^downloadResultBlock)(FFDownloadResponse *response);
+typedef void(^downloadResultBlock)(FFDownloadItem *response);
 
 @interface FFDownloadHandle : NSObject
 
-- (void)configDownloadResultBlock:(void(^)(FFDownloadResponse *response))downloadResultBlock;
+- (void)configDownloadResultBlock:(void(^)(FFDownloadItem *response))downloadResultBlock;
 
 - (void)startDownload:(NSString *)identify downloadUrl:(NSString *)downloadUrl;
 - (void)pauseDownload:(NSString *)identify;

@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		17564E421D360FAC00E45007 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 17564E411D360FAC00E45007 /* main.m */; };
 		17564E451D360FAC00E45007 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 17564E441D360FAC00E45007 /* AppDelegate.m */; };
-		17564E481D360FAC00E45007 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 17564E471D360FAC00E45007 /* ViewController.m */; };
 		17564E4B1D360FAC00E45007 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 17564E491D360FAC00E45007 /* Main.storyboard */; };
 		17564E4D1D360FAC00E45007 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 17564E4C1D360FAC00E45007 /* Assets.xcassets */; };
 		17564E501D360FAC00E45007 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 17564E4E1D360FAC00E45007 /* LaunchScreen.storyboard */; };
@@ -17,8 +16,10 @@
 		17564E661D360FAD00E45007 /* FFMutAndBackgroundDownloadUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 17564E651D360FAD00E45007 /* FFMutAndBackgroundDownloadUITests.m */; };
 		17564E771D360FFC00E45007 /* FFFileManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 17564E761D360FFC00E45007 /* FFFileManager.m */; };
 		17564E7A1D3610E700E45007 /* FFDownloadHandle.m in Sources */ = {isa = PBXBuildFile; fileRef = 17564E791D3610E700E45007 /* FFDownloadHandle.m */; };
-		17564E7D1D36111200E45007 /* FFDownloadResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 17564E7C1D36111200E45007 /* FFDownloadResponse.m */; };
 		17564E801D361B4200E45007 /* FFDownloadItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 17564E7F1D361B4200E45007 /* FFDownloadItem.m */; };
+		17DA2FF41D3641E700EA82EC /* FFDownloadingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 17DA2FF31D3641E700EA82EC /* FFDownloadingViewController.m */; };
+		17DA2FF71D36422200EA82EC /* FFDownloadSucViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 17DA2FF61D36422200EA82EC /* FFDownloadSucViewController.m */; };
+		17FB91171D37288600ED8841 /* FFBaseTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 17FB91161D37288600ED8841 /* FFBaseTableViewCell.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -43,8 +44,6 @@
 		17564E411D360FAC00E45007 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		17564E431D360FAC00E45007 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		17564E441D360FAC00E45007 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		17564E461D360FAC00E45007 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		17564E471D360FAC00E45007 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		17564E4A1D360FAC00E45007 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		17564E4C1D360FAC00E45007 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		17564E4F1D360FAC00E45007 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -59,10 +58,14 @@
 		17564E761D360FFC00E45007 /* FFFileManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FFFileManager.m; sourceTree = "<group>"; };
 		17564E781D3610E700E45007 /* FFDownloadHandle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FFDownloadHandle.h; sourceTree = "<group>"; };
 		17564E791D3610E700E45007 /* FFDownloadHandle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FFDownloadHandle.m; sourceTree = "<group>"; };
-		17564E7B1D36111200E45007 /* FFDownloadResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FFDownloadResponse.h; sourceTree = "<group>"; };
-		17564E7C1D36111200E45007 /* FFDownloadResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FFDownloadResponse.m; sourceTree = "<group>"; };
 		17564E7E1D361B4200E45007 /* FFDownloadItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FFDownloadItem.h; sourceTree = "<group>"; };
 		17564E7F1D361B4200E45007 /* FFDownloadItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FFDownloadItem.m; sourceTree = "<group>"; };
+		17DA2FF21D3641E700EA82EC /* FFDownloadingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FFDownloadingViewController.h; sourceTree = "<group>"; };
+		17DA2FF31D3641E700EA82EC /* FFDownloadingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FFDownloadingViewController.m; sourceTree = "<group>"; };
+		17DA2FF51D36422200EA82EC /* FFDownloadSucViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FFDownloadSucViewController.h; sourceTree = "<group>"; };
+		17DA2FF61D36422200EA82EC /* FFDownloadSucViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FFDownloadSucViewController.m; sourceTree = "<group>"; };
+		17FB91151D37288600ED8841 /* FFBaseTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FFBaseTableViewCell.h; sourceTree = "<group>"; };
+		17FB91161D37288600ED8841 /* FFBaseTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FFBaseTableViewCell.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -117,8 +120,12 @@
 				17564E741D360FF100E45007 /* FFFile */,
 				17564E431D360FAC00E45007 /* AppDelegate.h */,
 				17564E441D360FAC00E45007 /* AppDelegate.m */,
-				17564E461D360FAC00E45007 /* ViewController.h */,
-				17564E471D360FAC00E45007 /* ViewController.m */,
+				17DA2FF21D3641E700EA82EC /* FFDownloadingViewController.h */,
+				17DA2FF31D3641E700EA82EC /* FFDownloadingViewController.m */,
+				17DA2FF51D36422200EA82EC /* FFDownloadSucViewController.h */,
+				17DA2FF61D36422200EA82EC /* FFDownloadSucViewController.m */,
+				17FB91151D37288600ED8841 /* FFBaseTableViewCell.h */,
+				17FB91161D37288600ED8841 /* FFBaseTableViewCell.m */,
 				17564E491D360FAC00E45007 /* Main.storyboard */,
 				17564E4C1D360FAC00E45007 /* Assets.xcassets */,
 				17564E4E1D360FAC00E45007 /* LaunchScreen.storyboard */,
@@ -159,8 +166,6 @@
 			children = (
 				17564E781D3610E700E45007 /* FFDownloadHandle.h */,
 				17564E791D3610E700E45007 /* FFDownloadHandle.m */,
-				17564E7B1D36111200E45007 /* FFDownloadResponse.h */,
-				17564E7C1D36111200E45007 /* FFDownloadResponse.m */,
 				17564E7E1D361B4200E45007 /* FFDownloadItem.h */,
 				17564E7F1D361B4200E45007 /* FFDownloadItem.m */,
 			);
@@ -306,12 +311,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				17564E481D360FAC00E45007 /* ViewController.m in Sources */,
 				17564E7A1D3610E700E45007 /* FFDownloadHandle.m in Sources */,
 				17564E771D360FFC00E45007 /* FFFileManager.m in Sources */,
+				17FB91171D37288600ED8841 /* FFBaseTableViewCell.m in Sources */,
 				17564E801D361B4200E45007 /* FFDownloadItem.m in Sources */,
+				17DA2FF41D3641E700EA82EC /* FFDownloadingViewController.m in Sources */,
 				17564E451D360FAC00E45007 /* AppDelegate.m in Sources */,
-				17564E7D1D36111200E45007 /* FFDownloadResponse.m in Sources */,
+				17DA2FF71D36422200EA82EC /* FFDownloadSucViewController.m in Sources */,
 				17564E421D360FAC00E45007 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -538,6 +544,7 @@
 				17564E6C1D360FAD00E45007 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		17564E6D1D360FAD00E45007 /* Build configuration list for PBXNativeTarget "FFMutAndBackgroundDownloadTests" */ = {
 			isa = XCConfigurationList;
@@ -546,6 +553,7 @@
 				17564E6F1D360FAD00E45007 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		17564E701D360FAD00E45007 /* Build configuration list for PBXNativeTarget "FFMutAndBackgroundDownloadUITests" */ = {
 			isa = XCConfigurationList;
@@ -554,6 +562,7 @@
 				17564E721D360FAD00E45007 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
